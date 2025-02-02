@@ -14,18 +14,23 @@ public class KafkaProducerApp {
         logger.info("Starting Kafka Producer...");
 
         Properties props = new Properties();
-
         props.put("bootstrap.servers", "localhost:9092");
-
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
-        Producer<String, String> producer = new KafkaProducer<>(props);
+        String jsonData = PandaScoreAPIClient.fetchApi();
+        System.out.println("JSON-data som sendes til Kafka: " + jsonData);
 
-        ProducerRecord<String, String> record = new ProducerRecord<>("test-topic", "Hello, Kafka!");
-        producer.send(record);
+        if (jsonData != null && !jsonData.trim().isEmpty()) {
+            Producer<String, String> producer = new KafkaProducer<>(props);
+            ProducerRecord<String, String> record = new ProducerRecord<>("test-topic", jsonData);
 
-        producer.close();
+            producer.send(record);
+            producer.close();
+
+            logger.info("Data sendt til Kafka: " + jsonData);
+        } else {
+            logger.error("API-data er tom eller null. Sender ikke til Kafka.");
+        }
     }
-
 }

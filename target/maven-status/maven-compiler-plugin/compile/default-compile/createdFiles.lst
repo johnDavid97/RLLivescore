@@ -1,2 +1,5 @@
 com/rllivescore/App.class
 com/rllivescore/KafkaProducerApp.class
+com/rllivescore/KafkaConsumerApp.class
+com/rllivescore/ApiParser.class
+com/rllivescore/PandaScoreAPIClient.class
